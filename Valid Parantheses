@@ -1,0 +1,17 @@
+def isValid(s):
+    stack = [] #empty list
+    closetoOpen = {")":"(", "]": "[", "}": "{"} # dictionaries
+    for c in s: 
+        if c in closetoOpen:# Check if a bracket is a value in closetoOpen
+            if stack and stack[-1] == closetoOpen[c]: #check if close brackets match with its open counterpart
+                stack.pop()
+            else:
+                return False # if not return false
+        else:
+            stack.append(c) # if the next bracket after an open bracket is another open bracket add them to list
+    return True if not stack else False
+
+#Stack strategy
+s1 = "[({})]"
+s2 = "()(){()}"
+isValid(s2)
