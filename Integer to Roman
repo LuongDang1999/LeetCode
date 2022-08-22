@@ -1,0 +1,72 @@
+def intToRoman(num):
+        """
+        :type num: int
+        :rtype: str
+        
+        LIV = 54
+        L is 50, I is 51, V is 56
+        Check if I smaller than V
+        
+        """
+        ronum = ""
+        Roman = {1:'I', 
+                 5: 'V',
+                 10: 'X',
+                 50: 'L',
+                 100: 'C',
+                 500: 'D',
+                 1000: 'M'}
+        
+        while num >= 1000:
+            num -= 1000
+            ronum += Roman[1000]
+        
+        while num >= 900:
+            num -= 900
+            ronum += Roman[100] + Roman[1000]
+        
+        while num >= 500:
+            num -= 500
+            ronum += Roman[500]
+        
+        while num >= 400:
+            num -= 400
+            ronum += Roman[100] + Roman[500]
+            
+        while num >= 100:
+            num -= 100
+            ronum += Roman[100]
+            
+        while num >= 90:
+            num -= 90
+            ronum += Roman[10] + Roman[100]
+            
+        while num >= 50:
+            num -= 50
+            ronum += Roman[50]
+            
+        while num >= 40:
+            num -= 40
+            ronum += Roman[10] + Roman[50]
+            
+        while num >= 10:
+            num -= 10
+            ronum += Roman[10]
+            
+        while num >= 9:
+            num -= 9
+            ronum += Roman[1] + Roman[10]
+            
+        while num >= 5:
+            num -= 5
+            ronum += Roman[5]
+            
+        while num >= 4:
+            num -= 4
+            ronum += Roman[1] + Roman[5]
+            
+        while num >= 1:
+            num -= 1
+            ronum += Roman[1] 
+        
+        return ronum
