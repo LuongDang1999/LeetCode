@@ -1,0 +1,14 @@
+def longestCommonPrefix(strs):
+    common = ""
+    j = 0
+    strs.sort() # sort it out to put the shortest word at the front. strs = ["flower","flow","flown"] become strs = ["flow","flown", "flower"]. 
+                # Issue with index solved!
+    while j < len(strs[0]): # j is the index of words in list. 
+        for i in strs:
+            if i[j] == strs[0][j]: # Check letter at index j, for every word, whether if they match that of first word in the list
+                continue
+            else:
+                return common
+        common += str(strs[0][j])
+        j += 1 # If letter at index j is the same for all word. We can move to the next letter at index j + 1.
+    return common
