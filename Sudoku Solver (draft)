@@ -1,0 +1,151 @@
+# Online Python compiler (interpreter) to run Python online.
+# Write Python 3 code in this online editor and run it.
+import copy
+
+def printBoard(board):
+    for row in board:
+        for item in row:
+            print(item, end = " ")
+        print("\n")
+
+def getLegalMoves(board, pos):
+    x = pos[0]
+    y = pos[1]
+    legal_moves = ['1', '2', '3', '4', '5', '6', '7', '8', '9']
+    x_quadrant = 2
+    y_quadrant = 2
+    if x <= 2:
+        x_quadrant = 0
+    elif x <= 5:
+        x_quadrant = 1
+    if y <= 2:
+        y_quadrant = 0
+    elif y <= 5:
+        y_quadrant = 1
+        
+    for i in range(3*x_quadrant, 3*x_quadrant + 3):
+        for j in range(3*y_quadrant, 3*y_quadrant + 3):
+            character = board[i][j]
+            if character != "." and character in legal_moves:
+                legal_moves.remove(character)
+                
+    for character in board[x]:
+        if character != "." and character in legal_moves:
+            legal_moves.remove(character)
+           
+    for i in range(9):
+        character = board[i][y]
+        if character != "." and character in legal_moves:
+            legal_moves.remove(character)
+            
+    return legal_moves
+
+            
+def nextPos(pos):
+    x = pos[0]
+    y = pos[1]
+    if x == 8:
+        return (0, y+1)
+    return(x+1, y)
+
+def solveSudoku(board, pos):
+    x = pos[0]
+    y = pos[1]
+    if board[x][y] != ".":
+        if pos == (8, 8):
+            printBoard(board)
+            return True
+        return solveSudoku(board, nextPos(pos))
+    legalMoves = getLegalMoves(board, pos)
+    for move in legalMoves:
+        boardCopy = copy.deepcopy(board)
+        boardCopy[x][y] = move
+        if pos == (8, 8):
+            printBoard(boardCopy)
+            return True
+        if solveSudoku(boardCopy, nextPos(pos)):
+            return True
+    global_board = board
+    return False
+
+def ambiguity(board, ambiguityMeter):
+    for row in board:
+        count = 0
+        for item in row:
+            if item == ".":
+                count += 1
+        ambiguityMeter[0].append(count)
+    for i in range(9):
+        count = 0
+        for j in range(9):
+            if board[j][i] == ".":
+                count += 1
+        ambiguityMeter[1].append(count)
+        
+    for xShift in range(3):
+        for yShift in range(3):
+            count = 0  
+            for i in range(3):
+                for j in range(3):
+                    if board[j+xShift*3][i+yShift*3] == ".":
+                        count += 1
+            ambiguityMeter[2].append(count)
+            
+def calculateBoardAmbiguity(board, boardAmbiguity, ambiguityMeter):
+    for i in range(9):
+        for j in range(9):
+            if board[i][j] != ".":
+                boardAmbiguity[i][j] = 9
+            else:
+                horizontal = ambiguityMeter[0][i]
+                vertical = ambiguityMeter[1][j]
+                qudratical = ambiguityMeter[2][((i//3)*3 + (j//3))]
+                boardAmbiguity[i][j] = min(vertical, horizontal, qudratical)
+                
+def getLeastAmbiguity(boardAmbiguity):
+    minAmbiguity = 10
+    xMin = 0
+    yMin = 0
+    for i in range(9):
+        for j in range(9):
+            if boardAmbiguity[i][j] < minAmbiguity:
+                xMin = i
+                yMin = j
+    return (xMin, yMin)
+            
+board1 = [
+         ["5","3",".",".","7",".",".",".","."],
+         ["6",".",".","1","9","5",".",".","."],
+         [".","9","8",".",".",".",".","6","."],
+         ["8",".",".",".","6",".",".",".","3"],
+         ["4",".",".","8",".","3",".",".","1"],
+         ["7",".",".",".","2",".",".",".","6"],
+         [".","6",".",".",".",".","2","8","."],
+         [".",".",".","4","1","9",".",".","5"],
+         [".",".",".",".","8",".",".","7","9"]]
+
+
+board2 = [
+         [".",".",".","2","3",".",".",".","."],
+         [".","9",".",".",".",".",".","8","."],
+         [".",".",".",".",".","6","1",".","."],
+         [".",".",".","5",".",".","6",".","2"],
+         [".","7","1",".",".",".",".",".","."],
+         [".",".",".",".",".",".",".",".","."],
+         [".",".",".",".","1","4",".","7","."],
+         [".",".",".",".",".",".",".",".","5"],
+         [".",".",".",".",".",".",".",".","."]]
+
+ambiguityMeter = [[], [], []]
+ambiguity(board1, ambiguityMeter)
+
+boardAmbiguity = copy.deepcopy(board1)
+calculateBoardAmbiguity(board1, boardAmbiguity, ambiguityMeter)
+
+print(ambiguityMeter)
+print(printBoard(boardAmbiguity))
+
+print(getLeastAmbiguity(boardAmbiguity))
+
+if (solveSudoku(board2, (0, 0))):
+    print("success")
