@@ -68,50 +68,61 @@ def solveSudoku(board, pos):
     global_board = board
     return False
 
-def ambiguity(board, ambiguityMeter):
-    for row in board:
+def ambiguity(board, ambiguity_meter):
+    l = len(board)
+    for row in board: # row ambiguity
         count = 0
         for item in row:
             if item == ".":
                 count += 1
-        ambiguityMeter[0].append(count)
-    for i in range(9):
+        ambiguity_meter[0].append(count)
+        
+    for i in range(9): # column ambiguity
         count = 0
         for j in range(9):
             if board[j][i] == ".":
                 count += 1
-        ambiguityMeter[1].append(count)
+        ambiguity_meter[1].append(count)
         
-    for xShift in range(3):
-        for yShift in range(3):
-            count = 0  
+    for xshift in range(3): #quadrant ambiguity
+        for yshift in range(3):
+            count = 0
             for i in range(3):
                 for j in range(3):
-                    if board[j+xShift*3][i+yShift*3] == ".":
+                    if board[3*xshift + i][3*yshift + j] == ".":
                         count += 1
-            ambiguityMeter[2].append(count)
-            
-def calculateBoardAmbiguity(board, boardAmbiguity, ambiguityMeter):
+            ambiguity_meter[2].append(count)
+
+def ambiguity_index(board,ambiguity_meter):
+    ''' (2,0) at Q0, (3,3) at Q4, (8,4) at Q7'''
     for i in range(9):
         for j in range(9):
             if board[i][j] != ".":
-                boardAmbiguity[i][j] = 9
+                board[i][j] = [0,0,0]
             else:
-                horizontal = ambiguityMeter[0][i]
-                vertical = ambiguityMeter[1][j]
-                qudratical = ambiguityMeter[2][((i//3)*3 + (j//3))]
-                boardAmbiguity[i][j] = min(vertical, horizontal, qudratical)
-                
+                horizontal = ambiguity_meter[0][i]
+                vertical = ambiguity_meter[1][j]
+                quadrantical = ambiguity_meter[2][(i//3)*3 + j//3]
+                index = [horizontal,vertical,quadrantical]
+                index.sort()
+                board[i][j] = index
+              
+ambiguity_meter = [[], [], []]
+
 def getLeastAmbiguity(boardAmbiguity):
-    minAmbiguity = 10
+    minAmbiguity = [9,9,9]
     xMin = 0
     yMin = 0
     for i in range(9):
         for j in range(9):
+            if boardAmbiguity[i][j] == [0,0,0]:
+                continue
             if boardAmbiguity[i][j] < minAmbiguity:
+                minAmbiguity = boardAmbiguity[i][j]
                 xMin = i
                 yMin = j
-    return (xMin, yMin)
+    return (xMin, yMin) 
+
             
 board1 = [
          ["5","3",".",".","7",".",".",".","."],
