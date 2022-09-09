@@ -2,6 +2,7 @@
 # Write Python 3 code in this online editor and run it.
 print("Hello world")
 import copy
+
 def printBoard(board):
     for row in board:
         for item in row:
@@ -49,7 +50,7 @@ def ambiguity_index(board,ambiguity_meter):
                 board[i][j] = index
               
 
-def getLeastAmbiguity(boardAmbiguity):
+def getLeastAmbiguity(boardAmbiguity): #put board_index here
     minAmbiguity = [9,9,9]
     xMin = 0
     yMin = 0
@@ -61,6 +62,8 @@ def getLeastAmbiguity(boardAmbiguity):
                 minAmbiguity = boardAmbiguity[i][j]
                 xMin = i
                 yMin = j
+    if (xMin, yMin) == (0,0):
+        return False
     return (xMin, yMin) 
     
 def possible_list(board,pos):
@@ -109,9 +112,35 @@ board2 = [
          [".",".",".",".","1","4",".","7","."],
          [".",".",".",".",".",".",".",".","5"],
          [".",".",".",".",".",".",".",".","."]]
+         
+board3 = [["5","3","4","6","7","8","9","1","2"],
+          ["6","7","2","1","9","5","3","4","8"],
+          ["1","9","8","3","4","2","5","6","7"],
+          ["8","5","9","7","6","1","4","2","3"],
+          ["4","2","6","8","5","3","7","9","1"],
+          ["7","1","3","9","2","4","8","5","6"],
+          ["9","6","1","5","3","7","2","8","4"],
+          ["2","8","7","4","1","9","6","3","5"],
+          ["3","4","5","2","8","6","1","7","9"]]
 
 board_index = copy.deepcopy(board1)
 ambiguity(board_index,ambiguity_meter)
 ambiguity_index(board_index,ambiguity_meter)
 print(board_index)
 print(possible_list(board1,(2,8)))
+print(getLeastAmbiguity(board_index))
+
+
+    
+def solveSudoku(board):
+    board_index = copy.deepcopy(board) # Looking for a least ambiguous starting position!
+    ambiguity(board_index,ambiguity_meter)
+    ambiguity_index(board_index,ambiguity_meter)
+    find = getLeastAmbiguity(board_index)
+    if not find:
+        return True
+    else:
+        (row,col) = find
+    
+    legal_move = possible_list(board,(row,col))
+    for i in legal_move:
