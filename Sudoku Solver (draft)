@@ -3,108 +3,56 @@
 print("Hello world")
 import copy
 
-print("Hello world")
-import copy
-def printBoard(board):
-    for row in board:
-        for item in row:
-            print(item, end = " ")
-        print("\n")
-
-def possible_list(board,pos):
-    if board[pos[0]][pos[1]] != ".":
-        return False
-    taken_list = [] # row 
-    for j in range(9):
-        if board[pos[0]][j] != "." and board[pos[0]][j] not in taken_list:
-            taken_list += [board[pos[0]][j]]
-            
-    for i in range(9): # column 
-        if board[i][pos[1]] != "." and board[i][pos[1]] not in taken_list:
-            taken_list += [board[i][pos[1]]]
-        
-    quad_x = pos[1] // 3
-    quad_y = pos[0] // 3
-
-    for i in range(quad_y*3, quad_y*3 + 3): #quadrant
-        for j in range(quad_x * 3, quad_x*3 + 3):
-            if board[i][j] != "." and board[i][j] not in taken_list:
-                taken_list += [board[i][j]]
-    
-    possible_number = ["1","2","3","4","5","6","7","8","9"]
-    for i in taken_list:
-        if i in possible_number:
-            possible_number.remove(i)
-    
-    return possible_number
-
-def getLeastAmbiguity(board): 
-    minAmbiguity = 9
-    xMin = 0
-    yMin = 0
-    for i in range(9):
+def possible_list(self,board,pos):
+        if board[pos[0]][pos[1]] != ".":
+                return False
+        taken_list = [] # row 
         for j in range(9):
-            if possible_list(board,(i,j)):
-                if len(possible_list(board,(i,j))) < minAmbiguity and board[i][j] ==".":
-                    minAmbiguity = len(possible_list(board,(i,j)))
-                    xMin = i
-                    yMin = j
-    return (xMin, yMin) 
-    
-    
-board1 = [["5","3",".",".","7",".",".",".","."],
-          ["6",".",".","1","9","5",".",".","."],
-          [".","9","8",".",".",".",".","6","."],
-          ["8",".",".",".","6",".",".",".","3"],
-          ["4",".",".","8",".","3",".",".","1"],
-          ["7",".",".",".","2",".",".",".","6"],
-          [".","6",".",".",".",".","2","8","."],
-          [".",".",".","4","1","9",".",".","5"],
-          [".",".",".",".","8",".",".","7","9"]]
+            if board[pos[0]][j] != "." and board[pos[0]][j] not in taken_list:
+                taken_list += [board[pos[0]][j]]
+            
+        for i in range(9): # column 
+            if board[i][pos[1]] != "." and board[i][pos[1]] not in taken_list:
+                taken_list += [board[i][pos[1]]]
+        
+        quad_x = pos[1] // 3
+        quad_y = pos[0] // 3
 
-
-board2 = [[".",".",".","2",".",".",".",".","."],
-          [".","9",".",".",".",".",".","8","."],
-          [".",".",".",".",".","6","1",".","."],
-          [".",".",".","5",".",".","6",".","2"],
-          [".","7","1",".",".",".",".",".","."],
-          [".",".",".",".",".",".",".",".","."],
-          [".",".",".",".","1","4",".","7","."],
-          [".",".",".",".",".",".",".",".","5"],
-          [".",".",".",".",".",".",".",".","."]]
-         
-board1_solved = [['5', '3', '4', '6', '7', '8', '9', '1', '2'], 
-                ['6', '7', '2', '1', '9', '5', '3', '4', '8'], 
-                ['1', '9', '8', '3', '4', '2', '5', '6', '7'], 
-                ['8', '5', '9', '7', '6', '1', '4', '2', '3'], 
-                ['4', '2', '6', '8', '5', '3', '7', '9', '1'], 
-                ['7', '1', '3', '9', '2', '4', '8', '5', '6'], 
-                ['9', '6', '1', '5', '3', '7', '2', '8', '4'], 
-                ['2', '8', '7', '4', '1', '9', '6', '3', '5'], 
-                ['3', '4', '5', '2', '8', '6', '1', '7', '9']]
-                
-board2_solved = [['8', '8', '6', '2', '9', '9', '9', '6', '9'], 
-                 ['7', '9', '7', '7', '5', '7', '7', '8', '7'], 
-                 ['5', '5', '5', '9', '9', '6', '1', '3', '7'], 
-                 ['9', '8', '9', '5', '9', '9', '6', '9', '2'], 
-                 ['9', '7', '1', '6', '9', '3', '8', '4', '8'], 
-                 ['9', '6', '3', '8', '2', '8', '7', '5', '1'], 
-                 ['8', '5', '2', '8', '1', '4', '9', '7', '6'], 
-                 ['7', '1', '4', '3', '6', '9', '8', '2', '5'], 
-                 ['8', '.', '9', '7', '5', '2', '4', '1', '3']]
-                 
-def solveSudoku(board):
-    find = getLeastAmbiguity(board)
-    if not find:
-        return True
-    else:
-        (row,col) = find
-    legal_move = possible_list(board,(row,col))
-    if legal_move:
-        for i in legal_move:
-            #boardCopy = copy.deepcopy(board)
-            #boardCopy[row][col] = i
-            if solveSudoku(board):
-                return True
-                
-    return False
+        for i in range(quad_y*3, quad_y*3 + 3): #quadrant
+            for j in range(quad_x * 3, quad_x*3 + 3):
+                if board[i][j] != "." and board[i][j] not in taken_list:
+                    taken_list += [board[i][j]]
+    
+        possible_number = ["1","2","3","4","5","6","7","8","9"]
+        for i in taken_list:
+            if i in possible_number:
+                possible_number.remove(i)
+    
+        return possible_number
+    
+    def getLeastAmbiguity(self,board):
+        minAmbiguity = 9
+        xMin = 0
+        yMin = 0
+        for i in range(9):
+            for j in range(9):
+                if self.possible_list(board,(i,j)):
+                    if len(self.possible_list(board,(i,j))) < minAmbiguity and board[i][j] == ".":
+                        minAmbiguity = len(self.possible_list(board,(i,j)))
+                        xMin = i
+                        yMin = j
+        return (xMin, yMin) 
+        
+    def solveSudoku(self,board):
+        find = self.getLeastAmbiguity(board)
+        if not find:
+            return True
+        else:
+            (row,col) = find
+        legal_move = self.possible_list(board,(row,col))
+        if legal_move:
+            for i in legal_move:
+                board[row][col] = i
+                if self.solveSudoku(board):
+                    return True 
+        return False
