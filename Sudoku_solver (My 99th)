@@ -1,0 +1,58 @@
+########## Eliminated Candidates List ##########
+def row_elm(i,j,board): #elimanted candidates based on row
+    # Let's pick board[0][2] as example
+    row_can = [] #list of eliminated candidates
+    for j in range(9):
+        if board[i][j] != ".":
+            row_can += [board[i][j]]
+    
+    return row_can
+    
+def col_elm(i,j,board): #elimanted candidates based on column
+    # Let's pick board[0][2] as example
+    col_can = [] #list of eliminated candidates
+    for i in range(9):
+        if board[i][j] != ".":
+            col_can += [board[i][j]]
+    
+    return col_can
+    
+def quad_elm(i,j,board): #elimanted candidates based on quadrant
+    # Let's pick board[0][2] as example
+    # Remember the formula quad = 1 + (row//3)*2 + col
+    quad_can = [] #list of eliminated candidates
+    #(2,8) would go from i -> (0,2), j -> (6,8)
+    for row in range(i//3,i//3 + 3):
+        for col in range(j//3, j//3 + 3):
+            if board[row][col] != ".":
+                quad_can += [board[row][col]]
+    return quad_can
+
+#def candidates(board): #possible choices in empty plots
+
+def elm(i,j,board):
+    elm_list = [] #elimantion list
+    for e in row_elm(i,j,board): # e = element in row_elm
+        if e not in elm_list:
+            elm_list += e
+            
+    for e in col_elm(i,j,board): # e = element in row_elm
+        if e not in elm_list:
+            elm_list += e
+    
+    for e in quad_elm(i,j,board): # e = element in row_elm
+        if e not in elm_list:
+            elm_list += e
+    
+    elm_list.sort()
+    
+    return elm_list  
+
+def possible_choices(i,j,board):
+    possible_list = ['1','2','3','4','5','6','7','8','9']
+    for i in elm(i,j,board):
+        if i in possible_list:
+            possible_list.remove(i)
+    return possible_list
+########## Eliminated Candidates List ##########
+    
